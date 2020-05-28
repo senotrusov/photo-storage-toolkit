@@ -68,8 +68,11 @@ end
 
 class Importer
   JPEG_EXTENSIONS = ['.jpg', '.jpeg']
-  VIDEO_EXTENSIONS = ['.mov']
-  MEDIA_EXTENSIONS = JPEG_EXTENSIONS + VIDEO_EXTENSIONS
+  PNG_EXTENSIONS = ['.png']
+  VIDEO_EXTENSIONS = ['.mov', '.mp4']
+
+  ALL_IMAGE_EXTENSIONS = JPEG_EXTENSIONS + PNG_EXTENSIONS
+  MEDIA_EXTENSIONS = ALL_IMAGE_EXTENSIONS + VIDEO_EXTENSIONS
 
   def initialize incoming_path, storage_path
     @incoming_path = incoming_path
@@ -124,7 +127,7 @@ class Importer
       return
     end
 
-    if TEST_CORRUPTED && JPEG_EXTENSIONS.include?(extname) && is_image_corrupted?(filename)
+    if TEST_CORRUPTED && ALL_IMAGE_EXTENSIONS.include?(extname) && is_image_corrupted?(filename)
       STDERR.puts "#{filename} is corrupted"
       return
     end
@@ -190,17 +193,17 @@ class Importer
     return false
   end
 
-  def get_image_media_info filename
+  def get_jpeg_media_info filename
     media_info = {type: "photos"}
 
     begin
       exif = EXIFR::JPEG.new(filename)
 
       media_info[:datetime] = if exif.date_time_original
-          exif.date_time_original
-        elsif exif.date_time
-          exif.date_time
-        end
+        exif.date_time_original
+      elsif exif.date_time
+        exif.date_time
+      end
 
       if exif.model
         media_info[:camera] = exif.model
@@ -233,11 +236,31 @@ class Importer
     return media_info
   end
 
+  PNG_DATE_MODIFY_REGEXP = /^\s*date:modify: (.*)/
+
+  def get_png_media_info filename
+    media_info = {type: "screenshots"}
+
+    result, status = Open3.capture2e('magick', 'identify', '-verbose', filename)
+
+    if status.success?
+      if match = result.match(PNG_DATE_MODIFY_REGEXP)
+        media_info[:datetime] = DateTime.rfc3339(match[1])
+      end
+    end
+
+    return media_info
+  end
+
   def get_media_info filename, extname
-    if JPEG_EXTENSIONS.include? extname
-      media_info = get_image_media_info filename
+    media_info = if JPEG_EXTENSIONS.include? extname
+      get_jpeg_media_info filename
+    elsif PNG_EXTENSIONS.include? extname
+      get_png_media_info filename
     elsif VIDEO_EXTENSIONS.include? extname
-      media_info = get_video_media_info filename
+      get_video_media_info filename
+    else
+      {}
     end
 
     unless media_info[:datetime]
