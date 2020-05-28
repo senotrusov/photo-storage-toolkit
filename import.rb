@@ -27,7 +27,11 @@ def ensure_dir_exists path
 end
 
 def remove_empty_dirs path
-  Dir[path + '**/'].reverse_each { |d| Dir.rmdir d if Dir.entries(d).size == 2 }
+  Dir.glob(path + '**/').reverse[0..-2].each do |dir|
+    if Dir.entries(dir).size == 2
+      Dir.rmdir dir
+    end
+  end
 end
 
 
