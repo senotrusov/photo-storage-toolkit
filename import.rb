@@ -269,7 +269,7 @@ storage_path = Pathname.new(ENV['HOME']) + 'photo-storage'
 
 VERBOSE = true
 TEST_CORRUPTED = true
-CONCURRENCY = Concurrent.physical_processor_count / 2
+CONCURRENCY = Concurrent.physical_processor_count
 
 measure_time do
   importer = Importer.new incoming_path, storage_path
