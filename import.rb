@@ -6,7 +6,7 @@ require 'fileutils'
 require 'open3'
 require 'pathname'
 require 'sqlite3'
-
+require 'io/console'
 
 def measure_time
   start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -69,7 +69,7 @@ end
 class Importer
   JPEG_EXTENSIONS = ['.jpg', '.jpeg']
   PNG_EXTENSIONS = ['.png']
-  VIDEO_EXTENSIONS = ['.mov', '.mp4']
+  VIDEO_EXTENSIONS = ['.mov', '.mp4', '.flv']
 
   ALL_IMAGE_EXTENSIONS = JPEG_EXTENSIONS + PNG_EXTENSIONS
   MEDIA_EXTENSIONS = ALL_IMAGE_EXTENSIONS + VIDEO_EXTENSIONS
@@ -298,5 +298,8 @@ measure_time do
   importer = Importer.new incoming_path, storage_path
   importer.import
 end
+
+puts "Press any key to continue"
+STDIN.getch
 
 # TODO: digest cache cleanup?
