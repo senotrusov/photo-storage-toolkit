@@ -6,7 +6,6 @@ require 'fileutils'
 require 'open3'
 require 'pathname'
 require 'sqlite3'
-require 'io/console'
 
 def measure_time
   start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -298,8 +297,5 @@ measure_time do
   importer = Importer.new incoming_path, storage_path
   importer.import
 end
-
-puts "Press any key to continue"
-STDIN.getch
 
 # TODO: digest cache cleanup?
