@@ -286,7 +286,7 @@ class Importer
   end
 end
 
-incoming_path = Pathname.new(ENV['HOME']) + 'my-media-inbox'
+incoming_path = Pathname.new(ENV['HOME']) + 'my-media' + 'inbox'
 storage_path = Pathname.new(ENV['HOME']) + 'my-media'
 
 VERBOSE = true
