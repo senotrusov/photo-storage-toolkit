@@ -286,8 +286,8 @@ class Importer
   end
 end
 
-incoming_path = Pathname.new(ENV['HOME']) + 'photo-inbox'
-storage_path = Pathname.new(ENV['HOME']) + 'photo-storage'
+incoming_path = Pathname.new(ENV['HOME']) + 'my-media-inbox'
+storage_path = Pathname.new(ENV['HOME']) + 'my-media'
 
 VERBOSE = true
 TEST_CORRUPTED = true
