@@ -1,6 +1,6 @@
 # A simple script to import photos to my photo storage
 
-It moves photos around and may delete some of them, so please use it carefully.
+That tool moves photos out of your directories to it's own directory structure. It will delete your duplicates. Yes, you will not find your files where you put them! So please be carefull and better do not use this tool. At least until the moment I'll finish the documentation which will explain how it works and what to expect.
 
 ## Windows install
 
